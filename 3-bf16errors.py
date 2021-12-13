@@ -4,7 +4,6 @@ import tensorflow as tf
 
 class fp32to3bf16:
 
-
     bfloat16_0=0
     bfloat16_1=0
     bfloat16_2=0
@@ -23,24 +22,38 @@ def bf16matmul(a, b):
 
     bf_a=fp32to3bf16(a)
     bf_b=fp32to3bf16(b)
-    result=np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_0)+\
-           np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_0)+\
-           np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_1)+\
-           np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_2)+\
-           np.matmul(bf_a.bfloat16_2,bf_b.bfloat16_0)+\
-           np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_1)
+    result=tf.cast(np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_0),dtype=tf.float64)+\
+           tf.cast(np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_1),dtype=tf.float64)+\
+           tf.cast(np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_0),dtype=tf.float64)+\
+           tf.cast(np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_1),dtype=tf.float64)+\
+           tf.cast(np.matmul(bf_a.bfloat16_2,bf_b.bfloat16_0),dtype=tf.float64)+\
+           tf.cast(np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_2),dtype=tf.float64)
+
+
+
     return result
+def bf16_3error(n,m,loop):
+    count=0
+    errors3_16=0
+    while(count<=loop):
+        float64_a = np.random.random_sample((n, m))
+        float32_a = float64_a.astype(np.float32)
+        float64_b = np.random.random_sample((n, m))
+        float32_b = float64_b.astype(np.float32)
+        bfloat_ab = bf16matmul(float32_a, float32_b)
+        c = np.matmul(float64_a, float64_b)
+        c1 = tf.cast(bfloat_ab, dtype=tf.float64)
+        errors3_16+= np.linalg.norm(c - c1, ord=2) / np.linalg.norm(c, ord=2)
+        count+=1
+        error3_16=errors3_16/loop
+    return error3_16
 
 
-float64_a = np.random.random_sample((128, 128))
-float32_a = float64_a.astype(np.float32)
-float64_b= np.random.random_sample((128, 128))
-float32_b = float64_b.astype(np.float32)
-bfloat_ab=bf16matmul(float32_a,float32_b)
-c=np.matmul(float64_a,float64_b)
-c1=tf.cast(bfloat_ab,dtype=tf.float64)
-error3_16=np.linalg.norm(c - c1, ord=2) / np.linalg.norm(c, ord=2)
-print(error3_16)
+for i in [2,8,32,128]:
+    print(bf16_3error(i,i,100))
+
+
+
 
 
 

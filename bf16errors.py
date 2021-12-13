@@ -25,5 +25,5 @@ def bf16error(n,m,loop):
     return (error16)
 
 
-for i in [2,8,32,128,512,1024,2048]:
+for i in [2,8,32,128,512]:
     print(bf16error(i,i,100))
