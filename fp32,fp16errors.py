@@ -41,5 +41,5 @@ def errors(n,m,loop):
 
 
 
-for i in [2,8,32,128,512,1024,2048]:
+for i in [2,8,32,128]:
     print(errors(i,i,100))
