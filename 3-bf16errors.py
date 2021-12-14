@@ -22,12 +22,18 @@ def bf16matmul(a, b):
 
     bf_a=fp32to3bf16(a)
     bf_b=fp32to3bf16(b)
-    result=tf.cast(np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_0),dtype=tf.float64)+\
-           tf.cast(np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_1),dtype=tf.float64)+\
-           tf.cast(np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_0),dtype=tf.float64)+\
-           tf.cast(np.matmul(bf_a.bfloat16_1,bf_b.bfloat16_1),dtype=tf.float64)+\
-           tf.cast(np.matmul(bf_a.bfloat16_2,bf_b.bfloat16_0),dtype=tf.float64)+\
-           tf.cast(np.matmul(bf_a.bfloat16_0,bf_b.bfloat16_2),dtype=tf.float64)
+    float32_a0=tf.cast(bf_a.bfloat16_0,dtype=tf.float32)
+    float32_a1=tf.cast(bf_a.bfloat16_1,dtype=tf.float32)
+    float32_a2=tf.cast(bf_a.bfloat16_2,dtype=tf.float32)
+    float32_b0 = tf.cast(bf_b.bfloat16_0, dtype=tf.float32)
+    float32_b1 = tf.cast(bf_b.bfloat16_1, dtype=tf.float32)
+    float32_b2 = tf.cast(bf_b.bfloat16_2, dtype=tf.float32)
+    result=np.matmul(float32_a0,float32_b0)+\
+           np.matmul(float32_a1,float32_b0)+\
+           np.matmul(float32_a0,float32_b1)+\
+           np.matmul(float32_a1,float32_b1)+\
+           np.matmul(float32_a0,float32_b2)+\
+           np.matmul(float32_a2,float32_b0)
 
 
 
@@ -49,7 +55,7 @@ def bf16_3error(n,m,loop):
     return error3_16
 
 
-for i in [2,8,32,128]:
+for i in [4,8,16,32,64,128,256]:
     print(bf16_3error(i,i,100))
 
 
