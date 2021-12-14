@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 
 class fp32to3bf16:
@@ -55,8 +56,13 @@ def bf16_3error(n,m,loop):
     return error3_16
 
 
-for i in [4,8,16,32,64,128,256]:
-    print(bf16_3error(i,i,100))
+y_data = np.zeros(shape=(1, 30))
+
+for i in range(30):
+    y_data[0, i] = bf16_3error(4 * (i + 1), 4 * (i + 1),300)
+
+print(y_data)
+
 
 
 

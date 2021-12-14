@@ -1,5 +1,6 @@
 import numpy as np
 #import tensorflow as tf
+import matplotlib.pyplot as plt
 def errors(n,m,loop):
     count = 0
     error1 = 0
@@ -38,6 +39,12 @@ def errors(n,m,loop):
     return errors
 
 
+y_data=np.zeros(shape=(1,30))
 
-for i in [4,8,16,32,64,128,256]:
-    print(errors(i,i,100))
+
+for i in range(30):
+    y_data[0,i]=errors(4*(i+1),4*(i+1),200)
+   
+
+print(y_data)
+
