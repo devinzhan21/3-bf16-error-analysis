@@ -7,7 +7,9 @@ def errors(n,m,loop):
 
 
     while (count <= loop):
-        float64_a = np.random.random_sample((n, m))
+        #float64_a = np.random.random_sample((n, m))
+        float64_a =np.random.exponential(scale=10.0, size=(n,m)) 
+        #指数分布
         #print(float64_a.dtype)
         # print(float64_a)
         float32_a = float64_a.astype(np.float32)
@@ -18,7 +20,9 @@ def errors(n,m,loop):
         #print(float16_a.dtype)
         # bias=float64_a-float64_a1
         # print(bias)
-        float64_b = np.random.random_sample((n, m))
+        #float64_b = np.random.random_sample((n, m))
+        float64_b =np.random.exponential(scale=10.0, size=(n,m))
+        #指数分布
         # print(float64_b)
         float32_b = float64_b.astype(np.float32)
         float32_b.astype(np.float64)

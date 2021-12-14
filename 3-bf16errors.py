@@ -43,9 +43,11 @@ def bf16_3error(n,m,loop):
     count=0
     errors3_16=0
     while(count<=loop):
-        float64_a = np.random.random_sample((n, m))
+        #float64_a = np.random.random_sample((n, m))
+        float64_a =np.random.exponential(scale=10.0, size=(n,m))
         float32_a = float64_a.astype(np.float32)
-        float64_b = np.random.random_sample((n, m))
+        #float64_b = np.random.random_sample((n, m))
+        float64_b =np.random.exponential(scale=10.0, size=(n,m))
         float32_b = float64_b.astype(np.float32)
         bfloat_ab = bf16matmul(float32_a, float32_b)
         c = np.matmul(float64_a, float64_b)
